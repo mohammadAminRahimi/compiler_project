@@ -1,0 +1,671 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    DIV
+    ELSE
+    ELSEIF
+    EQ
+    ERROR
+    FALSE
+    FLOATNUMBER
+    FOR
+    GE
+    GT
+    IF
+    IN
+    INTEGERNUMBER
+    LE
+    LT
+    MOD
+    MUL
+    NE
+    NOT
+    ON
+    OR
+    PRINT
+    RETURN
+    SUB
+    SUM
+    TRUE
+    WHERE
+    WHILE
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> declist MAIN LRB RRB block
+Rule 2     program -> MAIN LRB RRB block
+Rule 3     empty -> <empty>
+Rule 4     declist -> dec
+Rule 5     declist -> declist dec
+Rule 6     dec -> vardec
+Rule 7     dec -> funcdec
+Rule 8     type -> INTEGER
+Rule 9     type -> FLOAT
+Rule 10    type -> BOOLEAN
+Rule 11    iddec -> ID
+Rule 12    iddec -> ID LSB exp RSB
+Rule 13    iddec -> ID ASSIGN exp
+Rule 14    idlist -> iddec
+Rule 15    idlist -> idlist COMMA iddec
+Rule 16    vardec -> idlist COLON type SEMICOLON
+Rule 17    funcdec -> FUNCTION ID LRB paramdecs RRB COLON type block
+Rule 18    funcdec -> FUNCTION ID LRB paramdecs RRB block
+Rule 19    paramdecs -> paramdecslist
+Rule 20    paramdecs -> empty
+Rule 21    paramdecslist -> paramdec
+Rule 22    paramdecslist -> paramdecslist COMMA paramdec
+Rule 23    paramdec -> ID COLON type
+Rule 24    paramdec -> ID LSB RSB COLON type
+Rule 25    block -> LCB RCB
+Rule 26    exp -> LSB RSB
+
+Terminals, with rules where they appear
+
+AND                  : 
+ASSIGN               : 13
+BOOLEAN              : 10
+COLON                : 16 17 23 24
+COMMA                : 15 22
+DIV                  : 
+ELSE                 : 
+ELSEIF               : 
+EQ                   : 
+ERROR                : 
+FALSE                : 
+FLOAT                : 9
+FLOATNUMBER          : 
+FOR                  : 
+FUNCTION             : 17 18
+GE                   : 
+GT                   : 
+ID                   : 11 12 13 17 18 23 24
+IF                   : 
+IN                   : 
+INTEGER              : 8
+INTEGERNUMBER        : 
+LCB                  : 25
+LE                   : 
+LRB                  : 1 2 17 18
+LSB                  : 12 24 26
+LT                   : 
+MAIN                 : 1 2
+MOD                  : 
+MUL                  : 
+NE                   : 
+NOT                  : 
+ON                   : 
+OR                   : 
+PRINT                : 
+RCB                  : 25
+RETURN               : 
+RRB                  : 1 2 17 18
+RSB                  : 12 24 26
+SEMICOLON            : 16
+SUB                  : 
+SUM                  : 
+TRUE                 : 
+WHERE                : 
+WHILE                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+block                : 1 2 17 18
+dec                  : 4 5
+declist              : 1 5
+empty                : 20
+exp                  : 12 13
+funcdec              : 7
+iddec                : 14 15
+idlist               : 15 16
+paramdec             : 21 22
+paramdecs            : 17 18
+paramdecslist        : 19 22
+program              : 0
+type                 : 16 17 23 24
+vardec               : 6
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . declist MAIN LRB RRB block
+    (2) program -> . MAIN LRB RRB block
+    (4) declist -> . dec
+    (5) declist -> . declist dec
+    (6) dec -> . vardec
+    (7) dec -> . funcdec
+    (16) vardec -> . idlist COLON type SEMICOLON
+    (17) funcdec -> . FUNCTION ID LRB paramdecs RRB COLON type block
+    (18) funcdec -> . FUNCTION ID LRB paramdecs RRB block
+    (14) idlist -> . iddec
+    (15) idlist -> . idlist COMMA iddec
+    (11) iddec -> . ID
+    (12) iddec -> . ID LSB exp RSB
+    (13) iddec -> . ID ASSIGN exp
+
+    MAIN            shift and go to state 3
+    FUNCTION        shift and go to state 8
+    ID              shift and go to state 9
+
+    program                        shift and go to state 1
+    declist                        shift and go to state 2
+    dec                            shift and go to state 4
+    vardec                         shift and go to state 5
+    funcdec                        shift and go to state 6
+    idlist                         shift and go to state 7
+    iddec                          shift and go to state 10
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> declist . MAIN LRB RRB block
+    (5) declist -> declist . dec
+    (6) dec -> . vardec
+    (7) dec -> . funcdec
+    (16) vardec -> . idlist COLON type SEMICOLON
+    (17) funcdec -> . FUNCTION ID LRB paramdecs RRB COLON type block
+    (18) funcdec -> . FUNCTION ID LRB paramdecs RRB block
+    (14) idlist -> . iddec
+    (15) idlist -> . idlist COMMA iddec
+    (11) iddec -> . ID
+    (12) iddec -> . ID LSB exp RSB
+    (13) iddec -> . ID ASSIGN exp
+
+    MAIN            shift and go to state 11
+    FUNCTION        shift and go to state 8
+    ID              shift and go to state 9
+
+    dec                            shift and go to state 12
+    vardec                         shift and go to state 5
+    funcdec                        shift and go to state 6
+    idlist                         shift and go to state 7
+    iddec                          shift and go to state 10
+
+state 3
+
+    (2) program -> MAIN . LRB RRB block
+
+    LRB             shift and go to state 13
+
+
+state 4
+
+    (4) declist -> dec .
+
+    MAIN            reduce using rule 4 (declist -> dec .)
+    FUNCTION        reduce using rule 4 (declist -> dec .)
+    ID              reduce using rule 4 (declist -> dec .)
+
+
+state 5
+
+    (6) dec -> vardec .
+
+    MAIN            reduce using rule 6 (dec -> vardec .)
+    FUNCTION        reduce using rule 6 (dec -> vardec .)
+    ID              reduce using rule 6 (dec -> vardec .)
+
+
+state 6
+
+    (7) dec -> funcdec .
+
+    MAIN            reduce using rule 7 (dec -> funcdec .)
+    FUNCTION        reduce using rule 7 (dec -> funcdec .)
+    ID              reduce using rule 7 (dec -> funcdec .)
+
+
+state 7
+
+    (16) vardec -> idlist . COLON type SEMICOLON
+    (15) idlist -> idlist . COMMA iddec
+
+    COLON           shift and go to state 14
+    COMMA           shift and go to state 15
+
+
+state 8
+
+    (17) funcdec -> FUNCTION . ID LRB paramdecs RRB COLON type block
+    (18) funcdec -> FUNCTION . ID LRB paramdecs RRB block
+
+    ID              shift and go to state 16
+
+
+state 9
+
+    (11) iddec -> ID .
+    (12) iddec -> ID . LSB exp RSB
+    (13) iddec -> ID . ASSIGN exp
+
+    COLON           reduce using rule 11 (iddec -> ID .)
+    COMMA           reduce using rule 11 (iddec -> ID .)
+    LSB             shift and go to state 17
+    ASSIGN          shift and go to state 18
+
+
+state 10
+
+    (14) idlist -> iddec .
+
+    COLON           reduce using rule 14 (idlist -> iddec .)
+    COMMA           reduce using rule 14 (idlist -> iddec .)
+
+
+state 11
+
+    (1) program -> declist MAIN . LRB RRB block
+
+    LRB             shift and go to state 19
+
+
+state 12
+
+    (5) declist -> declist dec .
+
+    MAIN            reduce using rule 5 (declist -> declist dec .)
+    FUNCTION        reduce using rule 5 (declist -> declist dec .)
+    ID              reduce using rule 5 (declist -> declist dec .)
+
+
+state 13
+
+    (2) program -> MAIN LRB . RRB block
+
+    RRB             shift and go to state 20
+
+
+state 14
+
+    (16) vardec -> idlist COLON . type SEMICOLON
+    (8) type -> . INTEGER
+    (9) type -> . FLOAT
+    (10) type -> . BOOLEAN
+
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    BOOLEAN         shift and go to state 24
+
+    type                           shift and go to state 21
+
+state 15
+
+    (15) idlist -> idlist COMMA . iddec
+    (11) iddec -> . ID
+    (12) iddec -> . ID LSB exp RSB
+    (13) iddec -> . ID ASSIGN exp
+
+    ID              shift and go to state 9
+
+    iddec                          shift and go to state 25
+
+state 16
+
+    (17) funcdec -> FUNCTION ID . LRB paramdecs RRB COLON type block
+    (18) funcdec -> FUNCTION ID . LRB paramdecs RRB block
+
+    LRB             shift and go to state 26
+
+
+state 17
+
+    (12) iddec -> ID LSB . exp RSB
+    (26) exp -> . LSB RSB
+
+    LSB             shift and go to state 27
+
+    exp                            shift and go to state 28
+
+state 18
+
+    (13) iddec -> ID ASSIGN . exp
+    (26) exp -> . LSB RSB
+
+    LSB             shift and go to state 27
+
+    exp                            shift and go to state 29
+
+state 19
+
+    (1) program -> declist MAIN LRB . RRB block
+
+    RRB             shift and go to state 30
+
+
+state 20
+
+    (2) program -> MAIN LRB RRB . block
+    (25) block -> . LCB RCB
+
+    LCB             shift and go to state 32
+
+    block                          shift and go to state 31
+
+state 21
+
+    (16) vardec -> idlist COLON type . SEMICOLON
+
+    SEMICOLON       shift and go to state 33
+
+
+state 22
+
+    (8) type -> INTEGER .
+
+    SEMICOLON       reduce using rule 8 (type -> INTEGER .)
+    COMMA           reduce using rule 8 (type -> INTEGER .)
+    RRB             reduce using rule 8 (type -> INTEGER .)
+    LCB             reduce using rule 8 (type -> INTEGER .)
+
+
+state 23
+
+    (9) type -> FLOAT .
+
+    SEMICOLON       reduce using rule 9 (type -> FLOAT .)
+    COMMA           reduce using rule 9 (type -> FLOAT .)
+    RRB             reduce using rule 9 (type -> FLOAT .)
+    LCB             reduce using rule 9 (type -> FLOAT .)
+
+
+state 24
+
+    (10) type -> BOOLEAN .
+
+    SEMICOLON       reduce using rule 10 (type -> BOOLEAN .)
+    COMMA           reduce using rule 10 (type -> BOOLEAN .)
+    RRB             reduce using rule 10 (type -> BOOLEAN .)
+    LCB             reduce using rule 10 (type -> BOOLEAN .)
+
+
+state 25
+
+    (15) idlist -> idlist COMMA iddec .
+
+    COLON           reduce using rule 15 (idlist -> idlist COMMA iddec .)
+    COMMA           reduce using rule 15 (idlist -> idlist COMMA iddec .)
+
+
+state 26
+
+    (17) funcdec -> FUNCTION ID LRB . paramdecs RRB COLON type block
+    (18) funcdec -> FUNCTION ID LRB . paramdecs RRB block
+    (19) paramdecs -> . paramdecslist
+    (20) paramdecs -> . empty
+    (21) paramdecslist -> . paramdec
+    (22) paramdecslist -> . paramdecslist COMMA paramdec
+    (3) empty -> .
+    (23) paramdec -> . ID COLON type
+    (24) paramdec -> . ID LSB RSB COLON type
+
+    RRB             reduce using rule 3 (empty -> .)
+    ID              shift and go to state 34
+
+    paramdecs                      shift and go to state 35
+    paramdecslist                  shift and go to state 36
+    empty                          shift and go to state 37
+    paramdec                       shift and go to state 38
+
+state 27
+
+    (26) exp -> LSB . RSB
+
+    RSB             shift and go to state 39
+
+
+state 28
+
+    (12) iddec -> ID LSB exp . RSB
+
+    RSB             shift and go to state 40
+
+
+state 29
+
+    (13) iddec -> ID ASSIGN exp .
+
+    COLON           reduce using rule 13 (iddec -> ID ASSIGN exp .)
+    COMMA           reduce using rule 13 (iddec -> ID ASSIGN exp .)
+
+
+state 30
+
+    (1) program -> declist MAIN LRB RRB . block
+    (25) block -> . LCB RCB
+
+    LCB             shift and go to state 32
+
+    block                          shift and go to state 41
+
+state 31
+
+    (2) program -> MAIN LRB RRB block .
+
+    $end            reduce using rule 2 (program -> MAIN LRB RRB block .)
+
+
+state 32
+
+    (25) block -> LCB . RCB
+
+    RCB             shift and go to state 42
+
+
+state 33
+
+    (16) vardec -> idlist COLON type SEMICOLON .
+
+    MAIN            reduce using rule 16 (vardec -> idlist COLON type SEMICOLON .)
+    FUNCTION        reduce using rule 16 (vardec -> idlist COLON type SEMICOLON .)
+    ID              reduce using rule 16 (vardec -> idlist COLON type SEMICOLON .)
+
+
+state 34
+
+    (23) paramdec -> ID . COLON type
+    (24) paramdec -> ID . LSB RSB COLON type
+
+    COLON           shift and go to state 43
+    LSB             shift and go to state 44
+
+
+state 35
+
+    (17) funcdec -> FUNCTION ID LRB paramdecs . RRB COLON type block
+    (18) funcdec -> FUNCTION ID LRB paramdecs . RRB block
+
+    RRB             shift and go to state 45
+
+
+state 36
+
+    (19) paramdecs -> paramdecslist .
+    (22) paramdecslist -> paramdecslist . COMMA paramdec
+
+    RRB             reduce using rule 19 (paramdecs -> paramdecslist .)
+    COMMA           shift and go to state 46
+
+
+state 37
+
+    (20) paramdecs -> empty .
+
+    RRB             reduce using rule 20 (paramdecs -> empty .)
+
+
+state 38
+
+    (21) paramdecslist -> paramdec .
+
+    COMMA           reduce using rule 21 (paramdecslist -> paramdec .)
+    RRB             reduce using rule 21 (paramdecslist -> paramdec .)
+
+
+state 39
+
+    (26) exp -> LSB RSB .
+
+    RSB             reduce using rule 26 (exp -> LSB RSB .)
+    COLON           reduce using rule 26 (exp -> LSB RSB .)
+    COMMA           reduce using rule 26 (exp -> LSB RSB .)
+
+
+state 40
+
+    (12) iddec -> ID LSB exp RSB .
+
+    COLON           reduce using rule 12 (iddec -> ID LSB exp RSB .)
+    COMMA           reduce using rule 12 (iddec -> ID LSB exp RSB .)
+
+
+state 41
+
+    (1) program -> declist MAIN LRB RRB block .
+
+    $end            reduce using rule 1 (program -> declist MAIN LRB RRB block .)
+
+
+state 42
+
+    (25) block -> LCB RCB .
+
+    $end            reduce using rule 25 (block -> LCB RCB .)
+    MAIN            reduce using rule 25 (block -> LCB RCB .)
+    FUNCTION        reduce using rule 25 (block -> LCB RCB .)
+    ID              reduce using rule 25 (block -> LCB RCB .)
+
+
+state 43
+
+    (23) paramdec -> ID COLON . type
+    (8) type -> . INTEGER
+    (9) type -> . FLOAT
+    (10) type -> . BOOLEAN
+
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    BOOLEAN         shift and go to state 24
+
+    type                           shift and go to state 47
+
+state 44
+
+    (24) paramdec -> ID LSB . RSB COLON type
+
+    RSB             shift and go to state 48
+
+
+state 45
+
+    (17) funcdec -> FUNCTION ID LRB paramdecs RRB . COLON type block
+    (18) funcdec -> FUNCTION ID LRB paramdecs RRB . block
+    (25) block -> . LCB RCB
+
+    COLON           shift and go to state 49
+    LCB             shift and go to state 32
+
+    block                          shift and go to state 50
+
+state 46
+
+    (22) paramdecslist -> paramdecslist COMMA . paramdec
+    (23) paramdec -> . ID COLON type
+    (24) paramdec -> . ID LSB RSB COLON type
+
+    ID              shift and go to state 34
+
+    paramdec                       shift and go to state 51
+
+state 47
+
+    (23) paramdec -> ID COLON type .
+
+    COMMA           reduce using rule 23 (paramdec -> ID COLON type .)
+    RRB             reduce using rule 23 (paramdec -> ID COLON type .)
+
+
+state 48
+
+    (24) paramdec -> ID LSB RSB . COLON type
+
+    COLON           shift and go to state 52
+
+
+state 49
+
+    (17) funcdec -> FUNCTION ID LRB paramdecs RRB COLON . type block
+    (8) type -> . INTEGER
+    (9) type -> . FLOAT
+    (10) type -> . BOOLEAN
+
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    BOOLEAN         shift and go to state 24
+
+    type                           shift and go to state 53
+
+state 50
+
+    (18) funcdec -> FUNCTION ID LRB paramdecs RRB block .
+
+    MAIN            reduce using rule 18 (funcdec -> FUNCTION ID LRB paramdecs RRB block .)
+    FUNCTION        reduce using rule 18 (funcdec -> FUNCTION ID LRB paramdecs RRB block .)
+    ID              reduce using rule 18 (funcdec -> FUNCTION ID LRB paramdecs RRB block .)
+
+
+state 51
+
+    (22) paramdecslist -> paramdecslist COMMA paramdec .
+
+    COMMA           reduce using rule 22 (paramdecslist -> paramdecslist COMMA paramdec .)
+    RRB             reduce using rule 22 (paramdecslist -> paramdecslist COMMA paramdec .)
+
+
+state 52
+
+    (24) paramdec -> ID LSB RSB COLON . type
+    (8) type -> . INTEGER
+    (9) type -> . FLOAT
+    (10) type -> . BOOLEAN
+
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    BOOLEAN         shift and go to state 24
+
+    type                           shift and go to state 54
+
+state 53
+
+    (17) funcdec -> FUNCTION ID LRB paramdecs RRB COLON type . block
+    (25) block -> . LCB RCB
+
+    LCB             shift and go to state 32
+
+    block                          shift and go to state 55
+
+state 54
+
+    (24) paramdec -> ID LSB RSB COLON type .
+
+    COMMA           reduce using rule 24 (paramdec -> ID LSB RSB COLON type .)
+    RRB             reduce using rule 24 (paramdec -> ID LSB RSB COLON type .)
+
+
+state 55
+
+    (17) funcdec -> FUNCTION ID LRB paramdecs RRB COLON type block .
+
+    MAIN            reduce using rule 17 (funcdec -> FUNCTION ID LRB paramdecs RRB COLON type block .)
+    FUNCTION        reduce using rule 17 (funcdec -> FUNCTION ID LRB paramdecs RRB COLON type block .)
+    ID              reduce using rule 17 (funcdec -> FUNCTION ID LRB paramdecs RRB COLON type block .)
+
