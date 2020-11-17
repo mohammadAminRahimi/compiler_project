@@ -2,33 +2,15 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    AND
-    DIV
     ELSE
     ELSEIF
-    EQ
     ERROR
-    FALSE
-    FLOATNUMBER
     FOR
-    GE
-    GT
     IF
     IN
-    INTEGERNUMBER
-    LE
-    LT
-    MOD
-    MUL
-    NE
-    NOT
     ON
-    OR
     PRINT
     RETURN
-    SUB
-    SUM
-    TRUE
     WHERE
     WHILE
 
@@ -46,8 +28,8 @@ Rule 8     type -> INTEGER
 Rule 9     type -> FLOAT
 Rule 10    type -> BOOLEAN
 Rule 11    iddec -> ID
-Rule 12    iddec -> ID LSB exp RSB
-Rule 13    iddec -> ID ASSIGN exp
+Rule 12    iddec -> ID LSB exa RSB
+Rule 13    iddec -> ID ASSIGN exa
 Rule 14    idlist -> iddec
 Rule 15    idlist -> idlist COMMA iddec
 Rule 16    vardec -> idlist COLON type SEMICOLON
@@ -60,53 +42,87 @@ Rule 22    paramdecslist -> paramdecslist COMMA paramdec
 Rule 23    paramdec -> ID COLON type
 Rule 24    paramdec -> ID LSB RSB COLON type
 Rule 25    block -> LCB RCB
-Rule 26    exp -> LSB RSB
+Rule 26    lvalue -> ID
+Rule 27    lvalue -> ID LSB exa RSB
+Rule 28    operator -> SUM
+Rule 29    operator -> SUB
+Rule 30    operator -> MUL
+Rule 31    operator -> DIV
+Rule 32    operator -> MOD
+Rule 33    operator -> GT
+Rule 34    operator -> GE
+Rule 35    operator -> LT
+Rule 36    operator -> LE
+Rule 37    operator -> EQ
+Rule 38    operator -> NE
+Rule 39    const -> INTEGERNUMBER
+Rule 40    const -> FLOATNUMBER
+Rule 41    const -> TRUE
+Rule 42    const -> FALSE
+Rule 43    exa -> lvalue ASSIGN exa
+Rule 44    exa -> ex
+Rule 45    ex -> NOT ex
+Rule 46    ex -> ex1
+Rule 47    ex1 -> ex1 AND exp
+Rule 48    ex1 -> ex1 OR exp
+Rule 49    ex1 -> exp
+Rule 50    exp -> exp operator exp1
+Rule 51    exp -> exp1
+Rule 52    exp1 -> SUB exp1
+Rule 53    exp1 -> exp2
+Rule 54    exp2 -> LRB exa RRB
+Rule 55    exp2 -> const
+Rule 56    exp2 -> ID LRB RRB
+Rule 57    exp2 -> ID LRB explist RRB
+Rule 58    exp2 -> lvalue
+Rule 59    explist -> exa
+Rule 60    explist -> explist COMMA exa
 
 Terminals, with rules where they appear
 
-AND                  : 
-ASSIGN               : 13
+AND                  : 47
+ASSIGN               : 13 43
 BOOLEAN              : 10
 COLON                : 16 17 23 24
-COMMA                : 15 22
-DIV                  : 
+COMMA                : 15 22 60
+DIV                  : 31
 ELSE                 : 
 ELSEIF               : 
-EQ                   : 
+EQ                   : 37
 ERROR                : 
-FALSE                : 
+FALSE                : 42
 FLOAT                : 9
-FLOATNUMBER          : 
+FLOATNUMBER          : 40
 FOR                  : 
 FUNCTION             : 17 18
-GE                   : 
-GT                   : 
-ID                   : 11 12 13 17 18 23 24
+GE                   : 34
+GT                   : 33
+ID                   : 11 12 13 17 18 23 24 26 27 56 57
 IF                   : 
 IN                   : 
 INTEGER              : 8
-INTEGERNUMBER        : 
+INTEGERNUMBER        : 39
 LCB                  : 25
-LE                   : 
-LRB                  : 1 2 17 18
-LSB                  : 12 24 26
-LT                   : 
+LE                   : 36
+LRB                  : 1 2 17 18 54 56 57
+LSB                  : 12 24 27
+LT                   : 35
 MAIN                 : 1 2
-MOD                  : 
-MUL                  : 
-NE                   : 
-NOT                  : 
+MOD                  : 32
+MUL                  : 30
+NE                   : 38
+NOT                  : 45
 ON                   : 
-OR                   : 
+OR                   : 48
 PRINT                : 
 RCB                  : 25
 RETURN               : 
-RRB                  : 1 2 17 18
-RSB                  : 12 24 26
+RRB                  : 1 2 17 18 54 56 57
+RSB                  : 12 24 27
 SEMICOLON            : 16
-SUB                  : 
-SUM                  : 
-TRUE                 : 
+SUB                  : 29 52
+SUM                  : 28
+TRUE                 : 41
 WHERE                : 
 WHILE                : 
 error                : 
@@ -114,13 +130,22 @@ error                :
 Nonterminals, with rules where they appear
 
 block                : 1 2 17 18
+const                : 55
 dec                  : 4 5
 declist              : 1 5
 empty                : 20
-exp                  : 12 13
+ex                   : 44 45
+ex1                  : 46 47 48
+exa                  : 12 13 27 43 54 59 60
+exp                  : 47 48 49 50
+exp1                 : 50 51 52
+exp2                 : 53
+explist              : 57 60
 funcdec              : 7
 iddec                : 14 15
 idlist               : 15 16
+lvalue               : 43 58
+operator             : 50
 paramdec             : 21 22
 paramdecs            : 17 18
 paramdecslist        : 19 22
@@ -145,8 +170,8 @@ state 0
     (14) idlist -> . iddec
     (15) idlist -> . idlist COMMA iddec
     (11) iddec -> . ID
-    (12) iddec -> . ID LSB exp RSB
-    (13) iddec -> . ID ASSIGN exp
+    (12) iddec -> . ID LSB exa RSB
+    (13) iddec -> . ID ASSIGN exa
 
     MAIN            shift and go to state 3
     FUNCTION        shift and go to state 8
@@ -178,8 +203,8 @@ state 2
     (14) idlist -> . iddec
     (15) idlist -> . idlist COMMA iddec
     (11) iddec -> . ID
-    (12) iddec -> . ID LSB exp RSB
-    (13) iddec -> . ID ASSIGN exp
+    (12) iddec -> . ID LSB exa RSB
+    (13) iddec -> . ID ASSIGN exa
 
     MAIN            shift and go to state 11
     FUNCTION        shift and go to state 8
@@ -245,8 +270,8 @@ state 8
 state 9
 
     (11) iddec -> ID .
-    (12) iddec -> ID . LSB exp RSB
-    (13) iddec -> ID . ASSIGN exp
+    (12) iddec -> ID . LSB exa RSB
+    (13) iddec -> ID . ASSIGN exa
 
     COLON           reduce using rule 11 (iddec -> ID .)
     COMMA           reduce using rule 11 (iddec -> ID .)
@@ -302,8 +327,8 @@ state 15
 
     (15) idlist -> idlist COMMA . iddec
     (11) iddec -> . ID
-    (12) iddec -> . ID LSB exp RSB
-    (13) iddec -> . ID ASSIGN exp
+    (12) iddec -> . ID LSB exa RSB
+    (13) iddec -> . ID ASSIGN exa
 
     ID              shift and go to state 9
 
@@ -319,27 +344,97 @@ state 16
 
 state 17
 
-    (12) iddec -> ID LSB . exp RSB
-    (26) exp -> . LSB RSB
+    (12) iddec -> ID LSB . exa RSB
+    (43) exa -> . lvalue ASSIGN exa
+    (44) exa -> . ex
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+    (45) ex -> . NOT ex
+    (46) ex -> . ex1
+    (47) ex1 -> . ex1 AND exp
+    (48) ex1 -> . ex1 OR exp
+    (49) ex1 -> . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
 
-    LSB             shift and go to state 27
+    ID              shift and go to state 27
+    NOT             shift and go to state 31
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
 
-    exp                            shift and go to state 28
+    exa                            shift and go to state 28
+    lvalue                         shift and go to state 29
+    ex                             shift and go to state 30
+    ex1                            shift and go to state 32
+    exp                            shift and go to state 33
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
 
 state 18
 
-    (13) iddec -> ID ASSIGN . exp
-    (26) exp -> . LSB RSB
+    (13) iddec -> ID ASSIGN . exa
+    (43) exa -> . lvalue ASSIGN exa
+    (44) exa -> . ex
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+    (45) ex -> . NOT ex
+    (46) ex -> . ex1
+    (47) ex1 -> . ex1 AND exp
+    (48) ex1 -> . ex1 OR exp
+    (49) ex1 -> . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
 
-    LSB             shift and go to state 27
+    ID              shift and go to state 27
+    NOT             shift and go to state 31
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
 
-    exp                            shift and go to state 29
+    exa                            shift and go to state 43
+    lvalue                         shift and go to state 29
+    ex                             shift and go to state 30
+    ex1                            shift and go to state 32
+    exp                            shift and go to state 33
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
 
 state 19
 
     (1) program -> declist MAIN LRB . RRB block
 
-    RRB             shift and go to state 30
+    RRB             shift and go to state 44
 
 
 state 20
@@ -347,15 +442,15 @@ state 20
     (2) program -> MAIN LRB RRB . block
     (25) block -> . LCB RCB
 
-    LCB             shift and go to state 32
+    LCB             shift and go to state 46
 
-    block                          shift and go to state 31
+    block                          shift and go to state 45
 
 state 21
 
     (16) vardec -> idlist COLON type . SEMICOLON
 
-    SEMICOLON       shift and go to state 33
+    SEMICOLON       shift and go to state 47
 
 
 state 22
@@ -409,59 +504,442 @@ state 26
     (24) paramdec -> . ID LSB RSB COLON type
 
     RRB             reduce using rule 3 (empty -> .)
-    ID              shift and go to state 34
+    ID              shift and go to state 48
 
-    paramdecs                      shift and go to state 35
-    paramdecslist                  shift and go to state 36
-    empty                          shift and go to state 37
-    paramdec                       shift and go to state 38
+    paramdecs                      shift and go to state 49
+    paramdecslist                  shift and go to state 50
+    empty                          shift and go to state 51
+    paramdec                       shift and go to state 52
 
 state 27
 
-    (26) exp -> LSB . RSB
+    (26) lvalue -> ID .
+    (27) lvalue -> ID . LSB exa RSB
+    (56) exp2 -> ID . LRB RRB
+    (57) exp2 -> ID . LRB explist RRB
 
-    RSB             shift and go to state 39
+    ASSIGN          reduce using rule 26 (lvalue -> ID .)
+    SUM             reduce using rule 26 (lvalue -> ID .)
+    SUB             reduce using rule 26 (lvalue -> ID .)
+    MUL             reduce using rule 26 (lvalue -> ID .)
+    DIV             reduce using rule 26 (lvalue -> ID .)
+    MOD             reduce using rule 26 (lvalue -> ID .)
+    GT              reduce using rule 26 (lvalue -> ID .)
+    GE              reduce using rule 26 (lvalue -> ID .)
+    LT              reduce using rule 26 (lvalue -> ID .)
+    LE              reduce using rule 26 (lvalue -> ID .)
+    EQ              reduce using rule 26 (lvalue -> ID .)
+    NE              reduce using rule 26 (lvalue -> ID .)
+    AND             reduce using rule 26 (lvalue -> ID .)
+    OR              reduce using rule 26 (lvalue -> ID .)
+    RSB             reduce using rule 26 (lvalue -> ID .)
+    COLON           reduce using rule 26 (lvalue -> ID .)
+    COMMA           reduce using rule 26 (lvalue -> ID .)
+    RRB             reduce using rule 26 (lvalue -> ID .)
+    LSB             shift and go to state 53
+    LRB             shift and go to state 54
 
 
 state 28
 
-    (12) iddec -> ID LSB exp . RSB
+    (12) iddec -> ID LSB exa . RSB
 
-    RSB             shift and go to state 40
+    RSB             shift and go to state 55
 
 
 state 29
 
-    (13) iddec -> ID ASSIGN exp .
+    (43) exa -> lvalue . ASSIGN exa
+    (58) exp2 -> lvalue .
 
-    COLON           reduce using rule 13 (iddec -> ID ASSIGN exp .)
-    COMMA           reduce using rule 13 (iddec -> ID ASSIGN exp .)
+    ASSIGN          shift and go to state 56
+    SUM             reduce using rule 58 (exp2 -> lvalue .)
+    SUB             reduce using rule 58 (exp2 -> lvalue .)
+    MUL             reduce using rule 58 (exp2 -> lvalue .)
+    DIV             reduce using rule 58 (exp2 -> lvalue .)
+    MOD             reduce using rule 58 (exp2 -> lvalue .)
+    GT              reduce using rule 58 (exp2 -> lvalue .)
+    GE              reduce using rule 58 (exp2 -> lvalue .)
+    LT              reduce using rule 58 (exp2 -> lvalue .)
+    LE              reduce using rule 58 (exp2 -> lvalue .)
+    EQ              reduce using rule 58 (exp2 -> lvalue .)
+    NE              reduce using rule 58 (exp2 -> lvalue .)
+    AND             reduce using rule 58 (exp2 -> lvalue .)
+    OR              reduce using rule 58 (exp2 -> lvalue .)
+    RSB             reduce using rule 58 (exp2 -> lvalue .)
+    COLON           reduce using rule 58 (exp2 -> lvalue .)
+    COMMA           reduce using rule 58 (exp2 -> lvalue .)
+    RRB             reduce using rule 58 (exp2 -> lvalue .)
 
 
 state 30
 
+    (44) exa -> ex .
+
+    RSB             reduce using rule 44 (exa -> ex .)
+    COLON           reduce using rule 44 (exa -> ex .)
+    COMMA           reduce using rule 44 (exa -> ex .)
+    RRB             reduce using rule 44 (exa -> ex .)
+
+
+state 31
+
+    (45) ex -> NOT . ex
+    (45) ex -> . NOT ex
+    (46) ex -> . ex1
+    (47) ex1 -> . ex1 AND exp
+    (48) ex1 -> . ex1 OR exp
+    (49) ex1 -> . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+
+    NOT             shift and go to state 31
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    ID              shift and go to state 58
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    ex                             shift and go to state 57
+    ex1                            shift and go to state 32
+    exp                            shift and go to state 33
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+    lvalue                         shift and go to state 59
+
+state 32
+
+    (46) ex -> ex1 .
+    (47) ex1 -> ex1 . AND exp
+    (48) ex1 -> ex1 . OR exp
+
+    RSB             reduce using rule 46 (ex -> ex1 .)
+    COLON           reduce using rule 46 (ex -> ex1 .)
+    COMMA           reduce using rule 46 (ex -> ex1 .)
+    RRB             reduce using rule 46 (ex -> ex1 .)
+    AND             shift and go to state 60
+    OR              shift and go to state 61
+
+
+state 33
+
+    (49) ex1 -> exp .
+    (50) exp -> exp . operator exp1
+    (28) operator -> . SUM
+    (29) operator -> . SUB
+    (30) operator -> . MUL
+    (31) operator -> . DIV
+    (32) operator -> . MOD
+    (33) operator -> . GT
+    (34) operator -> . GE
+    (35) operator -> . LT
+    (36) operator -> . LE
+    (37) operator -> . EQ
+    (38) operator -> . NE
+
+    AND             reduce using rule 49 (ex1 -> exp .)
+    OR              reduce using rule 49 (ex1 -> exp .)
+    RSB             reduce using rule 49 (ex1 -> exp .)
+    COLON           reduce using rule 49 (ex1 -> exp .)
+    COMMA           reduce using rule 49 (ex1 -> exp .)
+    RRB             reduce using rule 49 (ex1 -> exp .)
+    SUM             shift and go to state 63
+    SUB             shift and go to state 64
+    MUL             shift and go to state 65
+    DIV             shift and go to state 66
+    MOD             shift and go to state 67
+    GT              shift and go to state 68
+    GE              shift and go to state 69
+    LT              shift and go to state 70
+    LE              shift and go to state 71
+    EQ              shift and go to state 72
+    NE              shift and go to state 73
+
+    operator                       shift and go to state 62
+
+state 34
+
+    (51) exp -> exp1 .
+
+    SUM             reduce using rule 51 (exp -> exp1 .)
+    SUB             reduce using rule 51 (exp -> exp1 .)
+    MUL             reduce using rule 51 (exp -> exp1 .)
+    DIV             reduce using rule 51 (exp -> exp1 .)
+    MOD             reduce using rule 51 (exp -> exp1 .)
+    GT              reduce using rule 51 (exp -> exp1 .)
+    GE              reduce using rule 51 (exp -> exp1 .)
+    LT              reduce using rule 51 (exp -> exp1 .)
+    LE              reduce using rule 51 (exp -> exp1 .)
+    EQ              reduce using rule 51 (exp -> exp1 .)
+    NE              reduce using rule 51 (exp -> exp1 .)
+    AND             reduce using rule 51 (exp -> exp1 .)
+    OR              reduce using rule 51 (exp -> exp1 .)
+    RSB             reduce using rule 51 (exp -> exp1 .)
+    COLON           reduce using rule 51 (exp -> exp1 .)
+    COMMA           reduce using rule 51 (exp -> exp1 .)
+    RRB             reduce using rule 51 (exp -> exp1 .)
+
+
+state 35
+
+    (52) exp1 -> SUB . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    ID              shift and go to state 58
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    exp1                           shift and go to state 74
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+    lvalue                         shift and go to state 59
+
+state 36
+
+    (53) exp1 -> exp2 .
+
+    SUM             reduce using rule 53 (exp1 -> exp2 .)
+    SUB             reduce using rule 53 (exp1 -> exp2 .)
+    MUL             reduce using rule 53 (exp1 -> exp2 .)
+    DIV             reduce using rule 53 (exp1 -> exp2 .)
+    MOD             reduce using rule 53 (exp1 -> exp2 .)
+    GT              reduce using rule 53 (exp1 -> exp2 .)
+    GE              reduce using rule 53 (exp1 -> exp2 .)
+    LT              reduce using rule 53 (exp1 -> exp2 .)
+    LE              reduce using rule 53 (exp1 -> exp2 .)
+    EQ              reduce using rule 53 (exp1 -> exp2 .)
+    NE              reduce using rule 53 (exp1 -> exp2 .)
+    AND             reduce using rule 53 (exp1 -> exp2 .)
+    OR              reduce using rule 53 (exp1 -> exp2 .)
+    RSB             reduce using rule 53 (exp1 -> exp2 .)
+    COLON           reduce using rule 53 (exp1 -> exp2 .)
+    COMMA           reduce using rule 53 (exp1 -> exp2 .)
+    RRB             reduce using rule 53 (exp1 -> exp2 .)
+
+
+state 37
+
+    (54) exp2 -> LRB . exa RRB
+    (43) exa -> . lvalue ASSIGN exa
+    (44) exa -> . ex
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+    (45) ex -> . NOT ex
+    (46) ex -> . ex1
+    (47) ex1 -> . ex1 AND exp
+    (48) ex1 -> . ex1 OR exp
+    (49) ex1 -> . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
+
+    ID              shift and go to state 27
+    NOT             shift and go to state 31
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    exa                            shift and go to state 75
+    lvalue                         shift and go to state 29
+    ex                             shift and go to state 30
+    ex1                            shift and go to state 32
+    exp                            shift and go to state 33
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+
+state 38
+
+    (55) exp2 -> const .
+
+    SUM             reduce using rule 55 (exp2 -> const .)
+    SUB             reduce using rule 55 (exp2 -> const .)
+    MUL             reduce using rule 55 (exp2 -> const .)
+    DIV             reduce using rule 55 (exp2 -> const .)
+    MOD             reduce using rule 55 (exp2 -> const .)
+    GT              reduce using rule 55 (exp2 -> const .)
+    GE              reduce using rule 55 (exp2 -> const .)
+    LT              reduce using rule 55 (exp2 -> const .)
+    LE              reduce using rule 55 (exp2 -> const .)
+    EQ              reduce using rule 55 (exp2 -> const .)
+    NE              reduce using rule 55 (exp2 -> const .)
+    AND             reduce using rule 55 (exp2 -> const .)
+    OR              reduce using rule 55 (exp2 -> const .)
+    RSB             reduce using rule 55 (exp2 -> const .)
+    COLON           reduce using rule 55 (exp2 -> const .)
+    COMMA           reduce using rule 55 (exp2 -> const .)
+    RRB             reduce using rule 55 (exp2 -> const .)
+
+
+state 39
+
+    (39) const -> INTEGERNUMBER .
+
+    SUM             reduce using rule 39 (const -> INTEGERNUMBER .)
+    SUB             reduce using rule 39 (const -> INTEGERNUMBER .)
+    MUL             reduce using rule 39 (const -> INTEGERNUMBER .)
+    DIV             reduce using rule 39 (const -> INTEGERNUMBER .)
+    MOD             reduce using rule 39 (const -> INTEGERNUMBER .)
+    GT              reduce using rule 39 (const -> INTEGERNUMBER .)
+    GE              reduce using rule 39 (const -> INTEGERNUMBER .)
+    LT              reduce using rule 39 (const -> INTEGERNUMBER .)
+    LE              reduce using rule 39 (const -> INTEGERNUMBER .)
+    EQ              reduce using rule 39 (const -> INTEGERNUMBER .)
+    NE              reduce using rule 39 (const -> INTEGERNUMBER .)
+    AND             reduce using rule 39 (const -> INTEGERNUMBER .)
+    OR              reduce using rule 39 (const -> INTEGERNUMBER .)
+    RSB             reduce using rule 39 (const -> INTEGERNUMBER .)
+    COLON           reduce using rule 39 (const -> INTEGERNUMBER .)
+    COMMA           reduce using rule 39 (const -> INTEGERNUMBER .)
+    RRB             reduce using rule 39 (const -> INTEGERNUMBER .)
+
+
+state 40
+
+    (40) const -> FLOATNUMBER .
+
+    SUM             reduce using rule 40 (const -> FLOATNUMBER .)
+    SUB             reduce using rule 40 (const -> FLOATNUMBER .)
+    MUL             reduce using rule 40 (const -> FLOATNUMBER .)
+    DIV             reduce using rule 40 (const -> FLOATNUMBER .)
+    MOD             reduce using rule 40 (const -> FLOATNUMBER .)
+    GT              reduce using rule 40 (const -> FLOATNUMBER .)
+    GE              reduce using rule 40 (const -> FLOATNUMBER .)
+    LT              reduce using rule 40 (const -> FLOATNUMBER .)
+    LE              reduce using rule 40 (const -> FLOATNUMBER .)
+    EQ              reduce using rule 40 (const -> FLOATNUMBER .)
+    NE              reduce using rule 40 (const -> FLOATNUMBER .)
+    AND             reduce using rule 40 (const -> FLOATNUMBER .)
+    OR              reduce using rule 40 (const -> FLOATNUMBER .)
+    RSB             reduce using rule 40 (const -> FLOATNUMBER .)
+    COLON           reduce using rule 40 (const -> FLOATNUMBER .)
+    COMMA           reduce using rule 40 (const -> FLOATNUMBER .)
+    RRB             reduce using rule 40 (const -> FLOATNUMBER .)
+
+
+state 41
+
+    (41) const -> TRUE .
+
+    SUM             reduce using rule 41 (const -> TRUE .)
+    SUB             reduce using rule 41 (const -> TRUE .)
+    MUL             reduce using rule 41 (const -> TRUE .)
+    DIV             reduce using rule 41 (const -> TRUE .)
+    MOD             reduce using rule 41 (const -> TRUE .)
+    GT              reduce using rule 41 (const -> TRUE .)
+    GE              reduce using rule 41 (const -> TRUE .)
+    LT              reduce using rule 41 (const -> TRUE .)
+    LE              reduce using rule 41 (const -> TRUE .)
+    EQ              reduce using rule 41 (const -> TRUE .)
+    NE              reduce using rule 41 (const -> TRUE .)
+    AND             reduce using rule 41 (const -> TRUE .)
+    OR              reduce using rule 41 (const -> TRUE .)
+    RSB             reduce using rule 41 (const -> TRUE .)
+    COLON           reduce using rule 41 (const -> TRUE .)
+    COMMA           reduce using rule 41 (const -> TRUE .)
+    RRB             reduce using rule 41 (const -> TRUE .)
+
+
+state 42
+
+    (42) const -> FALSE .
+
+    SUM             reduce using rule 42 (const -> FALSE .)
+    SUB             reduce using rule 42 (const -> FALSE .)
+    MUL             reduce using rule 42 (const -> FALSE .)
+    DIV             reduce using rule 42 (const -> FALSE .)
+    MOD             reduce using rule 42 (const -> FALSE .)
+    GT              reduce using rule 42 (const -> FALSE .)
+    GE              reduce using rule 42 (const -> FALSE .)
+    LT              reduce using rule 42 (const -> FALSE .)
+    LE              reduce using rule 42 (const -> FALSE .)
+    EQ              reduce using rule 42 (const -> FALSE .)
+    NE              reduce using rule 42 (const -> FALSE .)
+    AND             reduce using rule 42 (const -> FALSE .)
+    OR              reduce using rule 42 (const -> FALSE .)
+    RSB             reduce using rule 42 (const -> FALSE .)
+    COLON           reduce using rule 42 (const -> FALSE .)
+    COMMA           reduce using rule 42 (const -> FALSE .)
+    RRB             reduce using rule 42 (const -> FALSE .)
+
+
+state 43
+
+    (13) iddec -> ID ASSIGN exa .
+
+    COLON           reduce using rule 13 (iddec -> ID ASSIGN exa .)
+    COMMA           reduce using rule 13 (iddec -> ID ASSIGN exa .)
+
+
+state 44
+
     (1) program -> declist MAIN LRB RRB . block
     (25) block -> . LCB RCB
 
-    LCB             shift and go to state 32
+    LCB             shift and go to state 46
 
-    block                          shift and go to state 41
+    block                          shift and go to state 76
 
-state 31
+state 45
 
     (2) program -> MAIN LRB RRB block .
 
     $end            reduce using rule 2 (program -> MAIN LRB RRB block .)
 
 
-state 32
+state 46
 
     (25) block -> LCB . RCB
 
-    RCB             shift and go to state 42
+    RCB             shift and go to state 77
 
 
-state 33
+state 47
 
     (16) vardec -> idlist COLON type SEMICOLON .
 
@@ -470,40 +948,40 @@ state 33
     ID              reduce using rule 16 (vardec -> idlist COLON type SEMICOLON .)
 
 
-state 34
+state 48
 
     (23) paramdec -> ID . COLON type
     (24) paramdec -> ID . LSB RSB COLON type
 
-    COLON           shift and go to state 43
-    LSB             shift and go to state 44
+    COLON           shift and go to state 78
+    LSB             shift and go to state 79
 
 
-state 35
+state 49
 
     (17) funcdec -> FUNCTION ID LRB paramdecs . RRB COLON type block
     (18) funcdec -> FUNCTION ID LRB paramdecs . RRB block
 
-    RRB             shift and go to state 45
+    RRB             shift and go to state 80
 
 
-state 36
+state 50
 
     (19) paramdecs -> paramdecslist .
     (22) paramdecslist -> paramdecslist . COMMA paramdec
 
     RRB             reduce using rule 19 (paramdecs -> paramdecslist .)
-    COMMA           shift and go to state 46
+    COMMA           shift and go to state 81
 
 
-state 37
+state 51
 
     (20) paramdecs -> empty .
 
     RRB             reduce using rule 20 (paramdecs -> empty .)
 
 
-state 38
+state 52
 
     (21) paramdecslist -> paramdec .
 
@@ -511,31 +989,489 @@ state 38
     RRB             reduce using rule 21 (paramdecslist -> paramdec .)
 
 
-state 39
+state 53
 
-    (26) exp -> LSB RSB .
+    (27) lvalue -> ID LSB . exa RSB
+    (43) exa -> . lvalue ASSIGN exa
+    (44) exa -> . ex
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+    (45) ex -> . NOT ex
+    (46) ex -> . ex1
+    (47) ex1 -> . ex1 AND exp
+    (48) ex1 -> . ex1 OR exp
+    (49) ex1 -> . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
 
-    RSB             reduce using rule 26 (exp -> LSB RSB .)
-    COLON           reduce using rule 26 (exp -> LSB RSB .)
-    COMMA           reduce using rule 26 (exp -> LSB RSB .)
+    ID              shift and go to state 27
+    NOT             shift and go to state 31
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    exa                            shift and go to state 82
+    lvalue                         shift and go to state 29
+    ex                             shift and go to state 30
+    ex1                            shift and go to state 32
+    exp                            shift and go to state 33
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+
+state 54
+
+    (56) exp2 -> ID LRB . RRB
+    (57) exp2 -> ID LRB . explist RRB
+    (59) explist -> . exa
+    (60) explist -> . explist COMMA exa
+    (43) exa -> . lvalue ASSIGN exa
+    (44) exa -> . ex
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+    (45) ex -> . NOT ex
+    (46) ex -> . ex1
+    (47) ex1 -> . ex1 AND exp
+    (48) ex1 -> . ex1 OR exp
+    (49) ex1 -> . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
+
+    RRB             shift and go to state 83
+    ID              shift and go to state 27
+    NOT             shift and go to state 31
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    explist                        shift and go to state 84
+    exa                            shift and go to state 85
+    lvalue                         shift and go to state 29
+    ex                             shift and go to state 30
+    ex1                            shift and go to state 32
+    exp                            shift and go to state 33
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+
+state 55
+
+    (12) iddec -> ID LSB exa RSB .
+
+    COLON           reduce using rule 12 (iddec -> ID LSB exa RSB .)
+    COMMA           reduce using rule 12 (iddec -> ID LSB exa RSB .)
 
 
-state 40
+state 56
 
-    (12) iddec -> ID LSB exp RSB .
+    (43) exa -> lvalue ASSIGN . exa
+    (43) exa -> . lvalue ASSIGN exa
+    (44) exa -> . ex
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+    (45) ex -> . NOT ex
+    (46) ex -> . ex1
+    (47) ex1 -> . ex1 AND exp
+    (48) ex1 -> . ex1 OR exp
+    (49) ex1 -> . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
 
-    COLON           reduce using rule 12 (iddec -> ID LSB exp RSB .)
-    COMMA           reduce using rule 12 (iddec -> ID LSB exp RSB .)
+    ID              shift and go to state 27
+    NOT             shift and go to state 31
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    lvalue                         shift and go to state 29
+    exa                            shift and go to state 86
+    ex                             shift and go to state 30
+    ex1                            shift and go to state 32
+    exp                            shift and go to state 33
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+
+state 57
+
+    (45) ex -> NOT ex .
+
+    RSB             reduce using rule 45 (ex -> NOT ex .)
+    COLON           reduce using rule 45 (ex -> NOT ex .)
+    COMMA           reduce using rule 45 (ex -> NOT ex .)
+    RRB             reduce using rule 45 (ex -> NOT ex .)
 
 
-state 41
+state 58
+
+    (56) exp2 -> ID . LRB RRB
+    (57) exp2 -> ID . LRB explist RRB
+    (26) lvalue -> ID .
+    (27) lvalue -> ID . LSB exa RSB
+
+    LRB             shift and go to state 54
+    SUM             reduce using rule 26 (lvalue -> ID .)
+    SUB             reduce using rule 26 (lvalue -> ID .)
+    MUL             reduce using rule 26 (lvalue -> ID .)
+    DIV             reduce using rule 26 (lvalue -> ID .)
+    MOD             reduce using rule 26 (lvalue -> ID .)
+    GT              reduce using rule 26 (lvalue -> ID .)
+    GE              reduce using rule 26 (lvalue -> ID .)
+    LT              reduce using rule 26 (lvalue -> ID .)
+    LE              reduce using rule 26 (lvalue -> ID .)
+    EQ              reduce using rule 26 (lvalue -> ID .)
+    NE              reduce using rule 26 (lvalue -> ID .)
+    AND             reduce using rule 26 (lvalue -> ID .)
+    OR              reduce using rule 26 (lvalue -> ID .)
+    RSB             reduce using rule 26 (lvalue -> ID .)
+    COLON           reduce using rule 26 (lvalue -> ID .)
+    COMMA           reduce using rule 26 (lvalue -> ID .)
+    RRB             reduce using rule 26 (lvalue -> ID .)
+    LSB             shift and go to state 53
+
+
+state 59
+
+    (58) exp2 -> lvalue .
+
+    SUM             reduce using rule 58 (exp2 -> lvalue .)
+    SUB             reduce using rule 58 (exp2 -> lvalue .)
+    MUL             reduce using rule 58 (exp2 -> lvalue .)
+    DIV             reduce using rule 58 (exp2 -> lvalue .)
+    MOD             reduce using rule 58 (exp2 -> lvalue .)
+    GT              reduce using rule 58 (exp2 -> lvalue .)
+    GE              reduce using rule 58 (exp2 -> lvalue .)
+    LT              reduce using rule 58 (exp2 -> lvalue .)
+    LE              reduce using rule 58 (exp2 -> lvalue .)
+    EQ              reduce using rule 58 (exp2 -> lvalue .)
+    NE              reduce using rule 58 (exp2 -> lvalue .)
+    AND             reduce using rule 58 (exp2 -> lvalue .)
+    OR              reduce using rule 58 (exp2 -> lvalue .)
+    RSB             reduce using rule 58 (exp2 -> lvalue .)
+    COLON           reduce using rule 58 (exp2 -> lvalue .)
+    COMMA           reduce using rule 58 (exp2 -> lvalue .)
+    RRB             reduce using rule 58 (exp2 -> lvalue .)
+
+
+state 60
+
+    (47) ex1 -> ex1 AND . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    ID              shift and go to state 58
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    exp                            shift and go to state 87
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+    lvalue                         shift and go to state 59
+
+state 61
+
+    (48) ex1 -> ex1 OR . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    ID              shift and go to state 58
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    exp                            shift and go to state 88
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+    lvalue                         shift and go to state 59
+
+state 62
+
+    (50) exp -> exp operator . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    ID              shift and go to state 58
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    exp1                           shift and go to state 89
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+    lvalue                         shift and go to state 59
+
+state 63
+
+    (28) operator -> SUM .
+
+    SUB             reduce using rule 28 (operator -> SUM .)
+    LRB             reduce using rule 28 (operator -> SUM .)
+    ID              reduce using rule 28 (operator -> SUM .)
+    INTEGERNUMBER   reduce using rule 28 (operator -> SUM .)
+    FLOATNUMBER     reduce using rule 28 (operator -> SUM .)
+    TRUE            reduce using rule 28 (operator -> SUM .)
+    FALSE           reduce using rule 28 (operator -> SUM .)
+
+
+state 64
+
+    (29) operator -> SUB .
+
+    SUB             reduce using rule 29 (operator -> SUB .)
+    LRB             reduce using rule 29 (operator -> SUB .)
+    ID              reduce using rule 29 (operator -> SUB .)
+    INTEGERNUMBER   reduce using rule 29 (operator -> SUB .)
+    FLOATNUMBER     reduce using rule 29 (operator -> SUB .)
+    TRUE            reduce using rule 29 (operator -> SUB .)
+    FALSE           reduce using rule 29 (operator -> SUB .)
+
+
+state 65
+
+    (30) operator -> MUL .
+
+    SUB             reduce using rule 30 (operator -> MUL .)
+    LRB             reduce using rule 30 (operator -> MUL .)
+    ID              reduce using rule 30 (operator -> MUL .)
+    INTEGERNUMBER   reduce using rule 30 (operator -> MUL .)
+    FLOATNUMBER     reduce using rule 30 (operator -> MUL .)
+    TRUE            reduce using rule 30 (operator -> MUL .)
+    FALSE           reduce using rule 30 (operator -> MUL .)
+
+
+state 66
+
+    (31) operator -> DIV .
+
+    SUB             reduce using rule 31 (operator -> DIV .)
+    LRB             reduce using rule 31 (operator -> DIV .)
+    ID              reduce using rule 31 (operator -> DIV .)
+    INTEGERNUMBER   reduce using rule 31 (operator -> DIV .)
+    FLOATNUMBER     reduce using rule 31 (operator -> DIV .)
+    TRUE            reduce using rule 31 (operator -> DIV .)
+    FALSE           reduce using rule 31 (operator -> DIV .)
+
+
+state 67
+
+    (32) operator -> MOD .
+
+    SUB             reduce using rule 32 (operator -> MOD .)
+    LRB             reduce using rule 32 (operator -> MOD .)
+    ID              reduce using rule 32 (operator -> MOD .)
+    INTEGERNUMBER   reduce using rule 32 (operator -> MOD .)
+    FLOATNUMBER     reduce using rule 32 (operator -> MOD .)
+    TRUE            reduce using rule 32 (operator -> MOD .)
+    FALSE           reduce using rule 32 (operator -> MOD .)
+
+
+state 68
+
+    (33) operator -> GT .
+
+    SUB             reduce using rule 33 (operator -> GT .)
+    LRB             reduce using rule 33 (operator -> GT .)
+    ID              reduce using rule 33 (operator -> GT .)
+    INTEGERNUMBER   reduce using rule 33 (operator -> GT .)
+    FLOATNUMBER     reduce using rule 33 (operator -> GT .)
+    TRUE            reduce using rule 33 (operator -> GT .)
+    FALSE           reduce using rule 33 (operator -> GT .)
+
+
+state 69
+
+    (34) operator -> GE .
+
+    SUB             reduce using rule 34 (operator -> GE .)
+    LRB             reduce using rule 34 (operator -> GE .)
+    ID              reduce using rule 34 (operator -> GE .)
+    INTEGERNUMBER   reduce using rule 34 (operator -> GE .)
+    FLOATNUMBER     reduce using rule 34 (operator -> GE .)
+    TRUE            reduce using rule 34 (operator -> GE .)
+    FALSE           reduce using rule 34 (operator -> GE .)
+
+
+state 70
+
+    (35) operator -> LT .
+
+    SUB             reduce using rule 35 (operator -> LT .)
+    LRB             reduce using rule 35 (operator -> LT .)
+    ID              reduce using rule 35 (operator -> LT .)
+    INTEGERNUMBER   reduce using rule 35 (operator -> LT .)
+    FLOATNUMBER     reduce using rule 35 (operator -> LT .)
+    TRUE            reduce using rule 35 (operator -> LT .)
+    FALSE           reduce using rule 35 (operator -> LT .)
+
+
+state 71
+
+    (36) operator -> LE .
+
+    SUB             reduce using rule 36 (operator -> LE .)
+    LRB             reduce using rule 36 (operator -> LE .)
+    ID              reduce using rule 36 (operator -> LE .)
+    INTEGERNUMBER   reduce using rule 36 (operator -> LE .)
+    FLOATNUMBER     reduce using rule 36 (operator -> LE .)
+    TRUE            reduce using rule 36 (operator -> LE .)
+    FALSE           reduce using rule 36 (operator -> LE .)
+
+
+state 72
+
+    (37) operator -> EQ .
+
+    SUB             reduce using rule 37 (operator -> EQ .)
+    LRB             reduce using rule 37 (operator -> EQ .)
+    ID              reduce using rule 37 (operator -> EQ .)
+    INTEGERNUMBER   reduce using rule 37 (operator -> EQ .)
+    FLOATNUMBER     reduce using rule 37 (operator -> EQ .)
+    TRUE            reduce using rule 37 (operator -> EQ .)
+    FALSE           reduce using rule 37 (operator -> EQ .)
+
+
+state 73
+
+    (38) operator -> NE .
+
+    SUB             reduce using rule 38 (operator -> NE .)
+    LRB             reduce using rule 38 (operator -> NE .)
+    ID              reduce using rule 38 (operator -> NE .)
+    INTEGERNUMBER   reduce using rule 38 (operator -> NE .)
+    FLOATNUMBER     reduce using rule 38 (operator -> NE .)
+    TRUE            reduce using rule 38 (operator -> NE .)
+    FALSE           reduce using rule 38 (operator -> NE .)
+
+
+state 74
+
+    (52) exp1 -> SUB exp1 .
+
+    SUM             reduce using rule 52 (exp1 -> SUB exp1 .)
+    SUB             reduce using rule 52 (exp1 -> SUB exp1 .)
+    MUL             reduce using rule 52 (exp1 -> SUB exp1 .)
+    DIV             reduce using rule 52 (exp1 -> SUB exp1 .)
+    MOD             reduce using rule 52 (exp1 -> SUB exp1 .)
+    GT              reduce using rule 52 (exp1 -> SUB exp1 .)
+    GE              reduce using rule 52 (exp1 -> SUB exp1 .)
+    LT              reduce using rule 52 (exp1 -> SUB exp1 .)
+    LE              reduce using rule 52 (exp1 -> SUB exp1 .)
+    EQ              reduce using rule 52 (exp1 -> SUB exp1 .)
+    NE              reduce using rule 52 (exp1 -> SUB exp1 .)
+    AND             reduce using rule 52 (exp1 -> SUB exp1 .)
+    OR              reduce using rule 52 (exp1 -> SUB exp1 .)
+    RSB             reduce using rule 52 (exp1 -> SUB exp1 .)
+    COLON           reduce using rule 52 (exp1 -> SUB exp1 .)
+    COMMA           reduce using rule 52 (exp1 -> SUB exp1 .)
+    RRB             reduce using rule 52 (exp1 -> SUB exp1 .)
+
+
+state 75
+
+    (54) exp2 -> LRB exa . RRB
+
+    RRB             shift and go to state 90
+
+
+state 76
 
     (1) program -> declist MAIN LRB RRB block .
 
     $end            reduce using rule 1 (program -> declist MAIN LRB RRB block .)
 
 
-state 42
+state 77
 
     (25) block -> LCB RCB .
 
@@ -545,7 +1481,7 @@ state 42
     ID              reduce using rule 25 (block -> LCB RCB .)
 
 
-state 43
+state 78
 
     (23) paramdec -> ID COLON . type
     (8) type -> . INTEGER
@@ -556,37 +1492,212 @@ state 43
     FLOAT           shift and go to state 23
     BOOLEAN         shift and go to state 24
 
-    type                           shift and go to state 47
+    type                           shift and go to state 91
 
-state 44
+state 79
 
     (24) paramdec -> ID LSB . RSB COLON type
 
-    RSB             shift and go to state 48
+    RSB             shift and go to state 92
 
 
-state 45
+state 80
 
     (17) funcdec -> FUNCTION ID LRB paramdecs RRB . COLON type block
     (18) funcdec -> FUNCTION ID LRB paramdecs RRB . block
     (25) block -> . LCB RCB
 
-    COLON           shift and go to state 49
-    LCB             shift and go to state 32
+    COLON           shift and go to state 93
+    LCB             shift and go to state 46
 
-    block                          shift and go to state 50
+    block                          shift and go to state 94
 
-state 46
+state 81
 
     (22) paramdecslist -> paramdecslist COMMA . paramdec
     (23) paramdec -> . ID COLON type
     (24) paramdec -> . ID LSB RSB COLON type
 
-    ID              shift and go to state 34
+    ID              shift and go to state 48
 
-    paramdec                       shift and go to state 51
+    paramdec                       shift and go to state 95
 
-state 47
+state 82
+
+    (27) lvalue -> ID LSB exa . RSB
+
+    RSB             shift and go to state 96
+
+
+state 83
+
+    (56) exp2 -> ID LRB RRB .
+
+    SUM             reduce using rule 56 (exp2 -> ID LRB RRB .)
+    SUB             reduce using rule 56 (exp2 -> ID LRB RRB .)
+    MUL             reduce using rule 56 (exp2 -> ID LRB RRB .)
+    DIV             reduce using rule 56 (exp2 -> ID LRB RRB .)
+    MOD             reduce using rule 56 (exp2 -> ID LRB RRB .)
+    GT              reduce using rule 56 (exp2 -> ID LRB RRB .)
+    GE              reduce using rule 56 (exp2 -> ID LRB RRB .)
+    LT              reduce using rule 56 (exp2 -> ID LRB RRB .)
+    LE              reduce using rule 56 (exp2 -> ID LRB RRB .)
+    EQ              reduce using rule 56 (exp2 -> ID LRB RRB .)
+    NE              reduce using rule 56 (exp2 -> ID LRB RRB .)
+    AND             reduce using rule 56 (exp2 -> ID LRB RRB .)
+    OR              reduce using rule 56 (exp2 -> ID LRB RRB .)
+    RSB             reduce using rule 56 (exp2 -> ID LRB RRB .)
+    COLON           reduce using rule 56 (exp2 -> ID LRB RRB .)
+    COMMA           reduce using rule 56 (exp2 -> ID LRB RRB .)
+    RRB             reduce using rule 56 (exp2 -> ID LRB RRB .)
+
+
+state 84
+
+    (57) exp2 -> ID LRB explist . RRB
+    (60) explist -> explist . COMMA exa
+
+    RRB             shift and go to state 97
+    COMMA           shift and go to state 98
+
+
+state 85
+
+    (59) explist -> exa .
+
+    RRB             reduce using rule 59 (explist -> exa .)
+    COMMA           reduce using rule 59 (explist -> exa .)
+
+
+state 86
+
+    (43) exa -> lvalue ASSIGN exa .
+
+    RSB             reduce using rule 43 (exa -> lvalue ASSIGN exa .)
+    COLON           reduce using rule 43 (exa -> lvalue ASSIGN exa .)
+    COMMA           reduce using rule 43 (exa -> lvalue ASSIGN exa .)
+    RRB             reduce using rule 43 (exa -> lvalue ASSIGN exa .)
+
+
+state 87
+
+    (47) ex1 -> ex1 AND exp .
+    (50) exp -> exp . operator exp1
+    (28) operator -> . SUM
+    (29) operator -> . SUB
+    (30) operator -> . MUL
+    (31) operator -> . DIV
+    (32) operator -> . MOD
+    (33) operator -> . GT
+    (34) operator -> . GE
+    (35) operator -> . LT
+    (36) operator -> . LE
+    (37) operator -> . EQ
+    (38) operator -> . NE
+
+    AND             reduce using rule 47 (ex1 -> ex1 AND exp .)
+    OR              reduce using rule 47 (ex1 -> ex1 AND exp .)
+    RSB             reduce using rule 47 (ex1 -> ex1 AND exp .)
+    COLON           reduce using rule 47 (ex1 -> ex1 AND exp .)
+    COMMA           reduce using rule 47 (ex1 -> ex1 AND exp .)
+    RRB             reduce using rule 47 (ex1 -> ex1 AND exp .)
+    SUM             shift and go to state 63
+    SUB             shift and go to state 64
+    MUL             shift and go to state 65
+    DIV             shift and go to state 66
+    MOD             shift and go to state 67
+    GT              shift and go to state 68
+    GE              shift and go to state 69
+    LT              shift and go to state 70
+    LE              shift and go to state 71
+    EQ              shift and go to state 72
+    NE              shift and go to state 73
+
+    operator                       shift and go to state 62
+
+state 88
+
+    (48) ex1 -> ex1 OR exp .
+    (50) exp -> exp . operator exp1
+    (28) operator -> . SUM
+    (29) operator -> . SUB
+    (30) operator -> . MUL
+    (31) operator -> . DIV
+    (32) operator -> . MOD
+    (33) operator -> . GT
+    (34) operator -> . GE
+    (35) operator -> . LT
+    (36) operator -> . LE
+    (37) operator -> . EQ
+    (38) operator -> . NE
+
+    AND             reduce using rule 48 (ex1 -> ex1 OR exp .)
+    OR              reduce using rule 48 (ex1 -> ex1 OR exp .)
+    RSB             reduce using rule 48 (ex1 -> ex1 OR exp .)
+    COLON           reduce using rule 48 (ex1 -> ex1 OR exp .)
+    COMMA           reduce using rule 48 (ex1 -> ex1 OR exp .)
+    RRB             reduce using rule 48 (ex1 -> ex1 OR exp .)
+    SUM             shift and go to state 63
+    SUB             shift and go to state 64
+    MUL             shift and go to state 65
+    DIV             shift and go to state 66
+    MOD             shift and go to state 67
+    GT              shift and go to state 68
+    GE              shift and go to state 69
+    LT              shift and go to state 70
+    LE              shift and go to state 71
+    EQ              shift and go to state 72
+    NE              shift and go to state 73
+
+    operator                       shift and go to state 62
+
+state 89
+
+    (50) exp -> exp operator exp1 .
+
+    SUM             reduce using rule 50 (exp -> exp operator exp1 .)
+    SUB             reduce using rule 50 (exp -> exp operator exp1 .)
+    MUL             reduce using rule 50 (exp -> exp operator exp1 .)
+    DIV             reduce using rule 50 (exp -> exp operator exp1 .)
+    MOD             reduce using rule 50 (exp -> exp operator exp1 .)
+    GT              reduce using rule 50 (exp -> exp operator exp1 .)
+    GE              reduce using rule 50 (exp -> exp operator exp1 .)
+    LT              reduce using rule 50 (exp -> exp operator exp1 .)
+    LE              reduce using rule 50 (exp -> exp operator exp1 .)
+    EQ              reduce using rule 50 (exp -> exp operator exp1 .)
+    NE              reduce using rule 50 (exp -> exp operator exp1 .)
+    AND             reduce using rule 50 (exp -> exp operator exp1 .)
+    OR              reduce using rule 50 (exp -> exp operator exp1 .)
+    RSB             reduce using rule 50 (exp -> exp operator exp1 .)
+    COLON           reduce using rule 50 (exp -> exp operator exp1 .)
+    COMMA           reduce using rule 50 (exp -> exp operator exp1 .)
+    RRB             reduce using rule 50 (exp -> exp operator exp1 .)
+
+
+state 90
+
+    (54) exp2 -> LRB exa RRB .
+
+    SUM             reduce using rule 54 (exp2 -> LRB exa RRB .)
+    SUB             reduce using rule 54 (exp2 -> LRB exa RRB .)
+    MUL             reduce using rule 54 (exp2 -> LRB exa RRB .)
+    DIV             reduce using rule 54 (exp2 -> LRB exa RRB .)
+    MOD             reduce using rule 54 (exp2 -> LRB exa RRB .)
+    GT              reduce using rule 54 (exp2 -> LRB exa RRB .)
+    GE              reduce using rule 54 (exp2 -> LRB exa RRB .)
+    LT              reduce using rule 54 (exp2 -> LRB exa RRB .)
+    LE              reduce using rule 54 (exp2 -> LRB exa RRB .)
+    EQ              reduce using rule 54 (exp2 -> LRB exa RRB .)
+    NE              reduce using rule 54 (exp2 -> LRB exa RRB .)
+    AND             reduce using rule 54 (exp2 -> LRB exa RRB .)
+    OR              reduce using rule 54 (exp2 -> LRB exa RRB .)
+    RSB             reduce using rule 54 (exp2 -> LRB exa RRB .)
+    COLON           reduce using rule 54 (exp2 -> LRB exa RRB .)
+    COMMA           reduce using rule 54 (exp2 -> LRB exa RRB .)
+    RRB             reduce using rule 54 (exp2 -> LRB exa RRB .)
+
+
+state 91
 
     (23) paramdec -> ID COLON type .
 
@@ -594,14 +1705,14 @@ state 47
     RRB             reduce using rule 23 (paramdec -> ID COLON type .)
 
 
-state 48
+state 92
 
     (24) paramdec -> ID LSB RSB . COLON type
 
-    COLON           shift and go to state 52
+    COLON           shift and go to state 99
 
 
-state 49
+state 93
 
     (17) funcdec -> FUNCTION ID LRB paramdecs RRB COLON . type block
     (8) type -> . INTEGER
@@ -612,9 +1723,9 @@ state 49
     FLOAT           shift and go to state 23
     BOOLEAN         shift and go to state 24
 
-    type                           shift and go to state 53
+    type                           shift and go to state 100
 
-state 50
+state 94
 
     (18) funcdec -> FUNCTION ID LRB paramdecs RRB block .
 
@@ -623,7 +1734,7 @@ state 50
     ID              reduce using rule 18 (funcdec -> FUNCTION ID LRB paramdecs RRB block .)
 
 
-state 51
+state 95
 
     (22) paramdecslist -> paramdecslist COMMA paramdec .
 
@@ -631,7 +1742,98 @@ state 51
     RRB             reduce using rule 22 (paramdecslist -> paramdecslist COMMA paramdec .)
 
 
-state 52
+state 96
+
+    (27) lvalue -> ID LSB exa RSB .
+
+    ASSIGN          reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    SUM             reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    SUB             reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    MUL             reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    DIV             reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    MOD             reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    GT              reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    GE              reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    LT              reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    LE              reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    EQ              reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    NE              reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    AND             reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    OR              reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    RSB             reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    COLON           reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    COMMA           reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+    RRB             reduce using rule 27 (lvalue -> ID LSB exa RSB .)
+
+
+state 97
+
+    (57) exp2 -> ID LRB explist RRB .
+
+    SUM             reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    SUB             reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    MUL             reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    DIV             reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    MOD             reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    GT              reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    GE              reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    LT              reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    LE              reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    EQ              reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    NE              reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    AND             reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    OR              reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    RSB             reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    COLON           reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    COMMA           reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+    RRB             reduce using rule 57 (exp2 -> ID LRB explist RRB .)
+
+
+state 98
+
+    (60) explist -> explist COMMA . exa
+    (43) exa -> . lvalue ASSIGN exa
+    (44) exa -> . ex
+    (26) lvalue -> . ID
+    (27) lvalue -> . ID LSB exa RSB
+    (45) ex -> . NOT ex
+    (46) ex -> . ex1
+    (47) ex1 -> . ex1 AND exp
+    (48) ex1 -> . ex1 OR exp
+    (49) ex1 -> . exp
+    (50) exp -> . exp operator exp1
+    (51) exp -> . exp1
+    (52) exp1 -> . SUB exp1
+    (53) exp1 -> . exp2
+    (54) exp2 -> . LRB exa RRB
+    (55) exp2 -> . const
+    (56) exp2 -> . ID LRB RRB
+    (57) exp2 -> . ID LRB explist RRB
+    (58) exp2 -> . lvalue
+    (39) const -> . INTEGERNUMBER
+    (40) const -> . FLOATNUMBER
+    (41) const -> . TRUE
+    (42) const -> . FALSE
+
+    ID              shift and go to state 27
+    NOT             shift and go to state 31
+    SUB             shift and go to state 35
+    LRB             shift and go to state 37
+    INTEGERNUMBER   shift and go to state 39
+    FLOATNUMBER     shift and go to state 40
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+
+    exa                            shift and go to state 101
+    lvalue                         shift and go to state 29
+    ex                             shift and go to state 30
+    ex1                            shift and go to state 32
+    exp                            shift and go to state 33
+    exp1                           shift and go to state 34
+    exp2                           shift and go to state 36
+    const                          shift and go to state 38
+
+state 99
 
     (24) paramdec -> ID LSB RSB COLON . type
     (8) type -> . INTEGER
@@ -642,18 +1844,26 @@ state 52
     FLOAT           shift and go to state 23
     BOOLEAN         shift and go to state 24
 
-    type                           shift and go to state 54
+    type                           shift and go to state 102
 
-state 53
+state 100
 
     (17) funcdec -> FUNCTION ID LRB paramdecs RRB COLON type . block
     (25) block -> . LCB RCB
 
-    LCB             shift and go to state 32
+    LCB             shift and go to state 46
 
-    block                          shift and go to state 55
+    block                          shift and go to state 103
 
-state 54
+state 101
+
+    (60) explist -> explist COMMA exa .
+
+    RRB             reduce using rule 60 (explist -> explist COMMA exa .)
+    COMMA           reduce using rule 60 (explist -> explist COMMA exa .)
+
+
+state 102
 
     (24) paramdec -> ID LSB RSB COLON type .
 
@@ -661,7 +1871,7 @@ state 54
     RRB             reduce using rule 24 (paramdec -> ID LSB RSB COLON type .)
 
 
-state 55
+state 103
 
     (17) funcdec -> FUNCTION ID LRB paramdecs RRB COLON type block .
 

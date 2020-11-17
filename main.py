@@ -2,7 +2,7 @@ from lexer import Lexer
 from parser import Parser
 # from parser import Parser
 lexer = Lexer().build()
-lexer.input("amin :int; main() {}")
+lexer.input("amin=3*2 :int; main() {}")
 # while True:
 #     tok = lexer.token()
 #     if not tok: break
@@ -12,4 +12,4 @@ lexer.input("amin :int; main() {}")
 #     print( tok.type , end="\t")
 
 parser = Parser()
-parser.build().parse("amin :int; main() {}", lexer, False)
+parser.build().parse("amin=3*2 :int; main() {}", lexer, False)

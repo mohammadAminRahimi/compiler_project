@@ -17,7 +17,7 @@ class Parser:
     # initial point
     def p_program(self, p):
         """program : declist MAIN LRB RRB block 
-        | MAIN LRB RRB block"""
+        | MAIN LRB RRB block"""#declist MAIN LRB RRB block | MAIN LRB RRB block
         print("program : declist main ( ) block")
 
 
@@ -53,9 +53,9 @@ class Parser:
 
     def p_iddec_to_id(self, p):
         """iddec : ID 
-        | ID LSB exp RSB 
-        | ID ASSIGN exp"""        
-        print("iddec : ID | ID LSB exp RSB | ID ASSIGN exp")
+        | ID LSB exa RSB 
+        | ID ASSIGN exa"""        
+        print("iddec : ID | ID LSB exa RSB | ID ASSIGN exa")
 
 
     def p_idlist_to_iddec(self, p):
@@ -96,13 +96,133 @@ class Parser:
         print("{ stmtlist }")
 
 
-    def p_temp(self, p):
-        """exp : LSB RSB """
+    def p_lvalue(self, p):
+        """lvalue : ID
+        | ID LSB exa RSB"""
+        print("""lvalue : ID
+        | ID LSB exa RSB""")
 
 
-    # def p_error(self, p):
-    #     print("Syntax error in input!")
+    def p_opertor(self, p):
+        """operator : SUM 
+        | SUB
+        | MUL
+        | DIV
+        | MOD
+        | GT
+        | GE
+        | LT
+        | LE
+        | EQ
+        | NE
+        """
+        print("""operator : SUM 
+        | SUB
+        | MUL
+        | DIV
+        | MOD
+        | GT
+        | GE
+        | LT
+        | LE
+        | EQ
+        | NE
+        """)
+
+
+    def p_const(self, p):
+        """const :  INTEGERNUMBER
+        | FLOATNUMBER
+        | TRUE
+        | FALSE
+        """
+        print("""const :  INTEGERNUMBER
+        | FLOATNUMBER
+        | True
+        | False
+        """)
+
+
+    def p_ex_assign(self,p):
+        """exa : lvalue ASSIGN exa
+        | ex
+        """
+        print("""exa : lvalue ASSIGN exa
+        | ex
+        """)
+        
+
+    def p_ex(self, p):
+        """ex : NOT ex 
+        | ex1
+        """
+        print("""ex : NOT ex 
+        | ex1
+        """)
+
+
+    def p_ex1(self, p):
+        """ex1 : ex1 AND exp
+        | ex1 OR exp
+        | exp
+        """
+        print("""ex1 : ex1 AND exp
+        | ex1 OR exp
+        | exp
+        """)
+
+
+    def p_exp(self, p):
+        """exp : exp operator exp1
+        | exp1
+        """
+        print("""exp : exp operator exp1
+        | exp1
+        """)
+
+
+    def p_exp1(self, p):
+        """exp1 : SUB exp1 
+        | exp2
+        """
+        print("""exp1 : SUB exp1 
+        | exp2
+        """)
+
+
+    def p_exp2(self, p):
+        """exp2 : LRB exa RRB
+        | const
+        | ID LRB RRB
+        | ID LRB explist RRB
+        | lvalue
+        """
+        print("""exp2 : LRB exa RRB
+        | const
+        | ID LRB RRB
+        | ID LRB explist RRB
+        | lvalue
+        """)
+
+
+    def p_explist(self, p):
+        """explist : exa
+        | explist COMMA exa
+        """
+        print("""explist : exa
+        | explist COMMA exa
+        """)
+    
+
+    # def p_temp(self, p):
+    #     """ex : LSB RSB """
+
+
+
+
+    def p_error(self, p):
+        print("Syntax error in input!")
 
     def build(self, **kwargs):
-        self.parser = yacc.yacc(module=self, **kwargs)
+        self.parser = yacc.yacc(module=self, **kwargs, debug=True)
         return self.parser
