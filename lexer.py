@@ -5,7 +5,7 @@ class Lexer:
     reserved = {
         'in':'IN' , 'not':'NOT' , 'or':'OR' , 'and':'AND' ,
         'for':'FOR' , 'where':'WHERE' , 'on':'ON', 'while':'WHILE' , 'elseif':'ELSEIF' , 'else':'ELSE' , 'if':'IF' ,
-        'main':'MAIN' , 'return':'RETURN' , 'print':'PRINT' , 'function':'FUNCTION' ,
+        'main':'MAIN' , 'return':'RETURN' , 'print':'PRINT' , 'fun':'FUNCTION' ,#function has been changed to fun
         'False':'FALSE' , 'True':'TRUE',
         'bool':'BOOLEAN' , 'float':'FLOAT' , 'int':'INTEGER'
     }
