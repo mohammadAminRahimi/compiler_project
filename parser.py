@@ -4,7 +4,22 @@ from lexer import Lexer
 class Parser:
 
     tokens = Lexer().tokens
-
+    precedence = (
+    ('left', 'UNMATCHED', 'MATCHED'),
+    ('left', 'ELSEIF', 'ELSE'),
+    ('right', 'low3'),
+    ('left', 'or'),
+    ('left', 'and'),
+    ('left', 'not'), 
+    ('left', 'ne', 'eq', 'NE', 'EQ'),
+    ('left', 'gt', 'ge', 'GE', 'GT'),
+    ('left', 'le', 'lt','LT', 'LE'),
+    ('left', 'SUM', 'SUB','sum','sub'),
+    ('left', 'MUL', 'DIV', 'MOD', 'div', 'mod', 'mul'),
+    ('left', 'ASSIGN'),
+    ('left', 'high'),
+    ('left', 'vhigh'),
+    )
 
 
     def __init__(self):
@@ -14,11 +29,8 @@ class Parser:
     # initial point
     def p_program(self, p):
         """program : declist MAIN LRB RRB block 
-            | MAIN LRB RRB block """
-        if len(p)==6:
-            print("program : declist MAIN LRB RRB block")
-        if len(p)==5:
-            print("program : MAIN LRB RRB block")
+        | MAIN LRB RRB block"""
+        print("program : declist MAIN LRB RRB block")
 
 
     # empty production
@@ -37,7 +49,6 @@ class Parser:
             print("declist : dec")
         if len(p)==3:
             print("declist : declist dec ")
-
 
 
     def p_dec_to_var_or_func(self, p):
@@ -117,13 +128,9 @@ class Parser:
             print('ID LSB RSB COLON type')
 
 
-
     def p_lvalue(self, p):
         """lvalue : ID LSB exp RSB"""
         print("""lvalue : ID LSB exa RSB""")
-
-    #functions for expression parts of the grammar
-
 
 
     def p_const(self, p):
@@ -132,7 +139,7 @@ class Parser:
         | TRUE
         | FALSE
         """
-        print('HELLO')
+        print(p[0],p[1])
         if p[1]=='True':
             print("const : TRUE")
         elif p[1]=='False':
@@ -140,14 +147,12 @@ class Parser:
         else:
             print("const : INTEGERNUMBER | FLOATNUMBER")
 
-    
-
-
-
-
 
     def p_exp(self, p):
-        """exp : LRB exp RRB %prec vhigh
+        """exp : lvalue ASSIGN exp %prec low3
+        | ID ASSIGN exp %prec low3
+        | ID %prec vhigh
+        | LRB exp RRB %prec vhigh
         | const %prec vhigh
         | ID LRB RRB %prec vhigh
         | ID LRB explist RRB %prec vhigh
@@ -155,21 +160,18 @@ class Parser:
         | SUB exp %prec high
         | exp SUM exp %prec sum
         | exp SUB exp %prec sub
-        | exp MUL exp %prec mu
-        | exp DIV exp %prec di
-        | exp MOD exp %prec mo
+        | exp MUL exp %prec mul
+        | exp DIV exp %prec div
+        | exp MOD exp %prec mod
         | exp GE exp %prec ge
         | exp GT exp %prec gt
         | exp LE exp %prec le
         | exp LT exp %prec lt
         | exp EQ exp %prec eq
         | exp NE exp %prec ne
-        | exp OR exp %prec low
-        | exp AND exp %prec low1
-        | NOT exp %prec low2
-        | lvalue ASSIGN exp %prec low3
-        | ID ASSIGN exp %prec low4
-        | ID
+        | exp OR exp %prec or
+        | exp AND exp %prec and
+        | NOT exp %prec not
         """
         if len(p)==5:
             print("exp : ID LRB explist RRB")
@@ -217,24 +219,6 @@ class Parser:
                 print('exp : lvalue | const | ID')
 
 
-    precedence = (
-    ('left', 'low4'),
-    ('left', 'low3'),
-    ('left', 'low2'),
-    ('left', 'low1'),
-    ('left', 'low'), 
-    # ('left', 'STT'),
-    ('left', 'UNMATCHED', 'MATCHED'),
-    ('left', 'ELSEIF', 'ELSE'),
-    ('left', 'ne','eq'),
-    ('left', 'gt', 'ge'),
-    ('left', 'le', 'lt'),
-    ('left', 'sub', 'sum'),
-    ('left', 'mu', 'di', 'mo'),
-    ('left', 'high'),
-    ('left', 'vhigh'),
-    )
-
     def p_explist(self, p):
         """explist : exp
         | explist COMMA exp
@@ -280,20 +264,27 @@ class Parser:
         """case : WHERE const COLON stmtlist"""
         print("case : where const : stmtlist")
 
+
     def p_s_to_matched(self, p):
         """stmt : matched %prec MATCHED
         | unmatched """
         print("stmt : matched | unmatched" )
+
 
     def p_unmatched(self, p):
         """unmatched : IF LRB exp RRB stmt elseiflist %prec UNMATCHED
         | IF LRB exp RRB matched elseiflist ELSE unmatched %prec ELSE
         | IF LRB exp RRB matched ELSE unmatched %prec ELSE
         | IF LRB exp RRB stmt %prec UNMATCHED"""
+        if len(p)==9:
+            print('stmt : IF LRB exp RRB stmt elseiflist ELSE stmt')
+        if len(p)==7:
+            if p[1]=='if':
+                print('stmt : IF LRB exp RRB stmt elseiflist')
         if len(p)==6:
-            print("unmatched : IF LRB exp RRB stmt %prec UNMATCHED")
+            print("stmt : IF LRB exp RRB stmt %prec stmt")
         if len(p)==8:
-            print("unmatched : IF LRB exp RRB matched ELSE unmatched | IF LRB exp RRB matched ELSE unmatched")
+            print("stmt : IF LRB exp RRB stmt ELSE stmt ")
 
 
     def p_stmt(self, p):
@@ -316,7 +307,7 @@ class Parser:
                 print("stmt : FOR LRB exp SEMICOLON exp SEMICOLON exp RRB stmt")
         if len(p)==9:
             if p[1]=="if":
-                print("stmt : IF LRB exp RRB matched elseiflist ELSE matched")
+                print("stmt : IF LRB exp RRB stmt elseiflist ELSE stmt")
             if p[1]=='on':
                 print('stmt : ON LRB exp RRB LCB cases RCB SEMICOLON')
         if len(p)==8:
@@ -326,16 +317,11 @@ class Parser:
                 print('stmt : FOR LRB ID IN ID RRB stmt')
             if p[1]=='if':
                 print('stmt : IF LRB exp RRB stmt ELSE stmt')
-        if len(p)==7:
-            if p[1]=='if':
-                print('stmt : IF LRB exp RRB stmt elseiflist')
         if len(p)==6:
             if p[1]=='print':
                 print("stmt : PRINT LRB ID RRB SEMICOLON")
             if p[1]=="while":
                 print("stmt : WHILE LRB exp RRB stmt")
-            if p[1]=="if":
-                print("stmt : IF LRB exp RRB stmt")
         if len(p)==5:
             pass
         if len(p)==4:
@@ -358,8 +344,11 @@ class Parser:
         else:
             print("elseiflist : ELSEIF LRB exp RRB stmt  | empty")
 
+
     def p_error(self, p):
         print("there is some Error")
+
+
     def build(self, **kwargs):
         self.parser = yacc.yacc(module=self, **kwargs, debug=True)
         return self.parser
